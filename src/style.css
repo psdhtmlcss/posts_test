@@ -42,10 +42,45 @@ article {
   width: 30%;
 }
 
+article * {
+  pointer-events: none;
+}
+
+.img {
+  display: flex;
+  justify-content: center;
+  border-radius: 3px;
+  margin-bottom: 15px;
+}
+
 img {
   display: block;
+  width: auto;
+  height: auto;
+  max-height: 195px;
+  border-radius: 3px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, .2);
+}
+
+article footer {
+  font-size: 14px;
+}
+
+/* Post description */
+.post-description {
+  margin-bottom: 60px;
+}
+
+.post-description .img {
+  width: 100%;
+  max-width: 600px;
+  max-height: initial;
+}
+
+.post-description .img img {
   width: 100%;
   height: auto;
+  max-height: initial;
 }
 
 /* Modal */

@@ -1,10 +1,12 @@
 import { updateStore } from './reducer';
+import { ScreenMode } from '../const';
 
 const initialState = {
   posts: [],
   promo: [],
   last: [],
-  popular: []
+  popular: [],
+  screenMode: ScreenMode.MAIN
 };
 
 const createStore = (reducer, initialState) => {

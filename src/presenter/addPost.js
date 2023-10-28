@@ -1,11 +1,14 @@
-import { ADD_NEW_POST } from '../store/actions';
+import { ScreenMode } from '../const';
+import { ADD_NEW_POST, TOGGLE_SCREEN_MODE } from '../store/actions';
+import { getRandomInteger } from '../utils/utils';
 
 export default class AddPost {
-  constructor(modal, form, store, postsStore) {
+  constructor(modal, form, store, postsStore, handleNewPostClick) {
     this._modal = modal;
     this._form = form;
     this._store = store;
     this._postsStore = postsStore;
+    this._handleNewPostClick = handleNewPostClick;
     this._formHeading = this._form.querySelector('.form-heading');
     this._formLink = this._form.querySelector('.form-link');
     this._formDescription = this._form.querySelector('.form-description');
@@ -55,13 +58,17 @@ export default class AddPost {
       link: this._formLink.value,
       description: this._formDescription.value,
       promo: this._formPromo.checked,
-      views: 0,
+      views: getRandomInteger(0, 5000),
     }
     this._store.dispatch({ type: ADD_NEW_POST, payload: newPostData });
-    console.log('im here', this._store.getState().posts);
+    if (this._store.getState().screenMode !== ScreenMode.MAIN) {
+      this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.MAIN });
+    }
+    console.log('im here', this._store.getState());
     this._postsStore.setItems(this._store.getState().posts);
-    console.log('after add post', this._store.getState());
+    console.log('after add post', this._store.getState().posts);
     this.modalClose();
+    this._handleNewPostClick();
   }
 
 }
