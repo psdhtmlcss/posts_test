@@ -27,10 +27,11 @@ const modal = document.querySelector('.modal');
 const showHeaderTime = showDateFormat(time);
 setInterval(showHeaderTime, 1000);
 
-const postsPresenter = new PostsPresenter(nav, main, store);
+const postsPresenter = new PostsPresenter(nav, main, store, postsStore);
 const handleNewPostClick = () => {
   postsPresenter.updateMainScreen();
 };
+
 const addPostPresenter = new AddPostPresenter(modal, form, store, postsStore, handleNewPostClick);
 
 postsPresenter.init();
@@ -41,5 +42,4 @@ const onAddNewPostClick = (evt) => {
 }
 
 addNewPostButton.addEventListener('click', onAddNewPostClick);
-
 

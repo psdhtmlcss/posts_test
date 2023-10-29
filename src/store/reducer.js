@@ -1,4 +1,4 @@
-import { LOAD_DATA, ADD_NEW_POST, TOGGLE_SCREEN_MODE } from './actions';
+import { LOAD_DATA, ADD_NEW_POST, TOGGLE_SCREEN_MODE, DELETE_POST } from './actions';
 
 const PROMO_COUNT = 3;
 const LAST_POST_COUNT = 7;
@@ -30,6 +30,12 @@ export const updateStore = (state, action) => {
       
     case ADD_NEW_POST:
       state.posts.push(action.payload);
+      sortData(state, state.posts);
+      return state;
+    case DELETE_POST:
+      const postIndex = state.posts.findIndex(item => item.id === action.payload);
+      console.log('post index', postIndex);
+      state.posts.splice(postIndex, 1);
       sortData(state, state.posts);
       return state;
     case TOGGLE_SCREEN_MODE:

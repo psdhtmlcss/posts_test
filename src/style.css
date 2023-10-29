@@ -31,6 +31,10 @@ body.modal-open {
   padding: 15px;
 }
 
+.section {
+  margin-bottom: 60px;
+}
+
 .posts {
   display: flex;
   justify-content: space-between;
@@ -51,11 +55,12 @@ article * {
   justify-content: center;
   border-radius: 3px;
   margin-bottom: 15px;
+  height: 195px;
 }
 
 img {
   display: block;
-  width: auto;
+  width: 100%;
   height: auto;
   max-height: 195px;
   border-radius: 3px;
@@ -66,6 +71,19 @@ article footer {
   font-size: 14px;
 }
 
+.promo {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  margin-top: 7px;
+  padding: 0 10px;
+  color: white;
+  font-size: 12px;
+  line-height: 12px;
+  border-radius: 3px;
+  background-color: #fe5113;
+}
+
 /* Post description */
 .post-description {
   margin-bottom: 60px;
@@ -73,14 +91,18 @@ article footer {
 
 .post-description .img {
   width: 100%;
+  height: auto;
   max-width: 600px;
-  max-height: initial;
 }
 
 .post-description .img img {
   width: 100%;
   height: auto;
   max-height: initial;
+}
+
+.post-description .options {
+  margin-top: 30px;
 }
 
 /* Modal */

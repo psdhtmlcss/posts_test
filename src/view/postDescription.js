@@ -9,9 +9,11 @@ const createElement = ({heading, id, createDate, link, description, promo, views
       <footer>
         <strong>Дата создания:</strong> <time>${formatter.format(createDate)}</time><br>
         <strong>Кол-во просмотров:</strong> <span class="views-count">${views}</span><br>
-        ${promo ? 'Промо' : ''}
+        ${promo ? '<span class="promo">Промо</span>' : ''}
       </footer>
+      <div class="options"><button type="button" class="delete-post">Удалить пост</button></div>
     </div>
+    
   </section>`
 );
 

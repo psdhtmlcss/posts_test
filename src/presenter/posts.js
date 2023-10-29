@@ -9,13 +9,15 @@ import { ScreenMode } from '../const';
 
 const NO_DATA = 'Нет данных';
 export default class Posts {
-  constructor(nav, main, store) {
+  constructor(nav, main, store, postsStore) {
     this._nav = nav;
     this._main = main;
     this._store = store;
-    this._postDescriptionPresenter = new PostDescriptionPresenter();
+    this._postsStore = postsStore;
+    this._postDescriptionPresenter = new PostDescriptionPresenter(this._store, this._postsStore);
     this._loader = new LoaderView().renderLoaderTemplate();
 
+    this._handleDeletePost = this._handleDeletePost.bind(this);
     this._onPostClick = this._onPostClick.bind(this);
     this._onNavClick = this._onNavClick.bind(this);
   }
@@ -24,7 +26,7 @@ export default class Posts {
     console.log(this._store.getState());
     this._nav.addEventListener('click', this._onNavClick);
     if (!this._store.getState().posts.length) {
-      this._main.insertAdjacentHTML('beforeend', `<div style="text-align: center; margin: 60px 0; color: #777;">${NO_DATA}</div>`);
+      this._renderMessage();
       return;
     }
     this._renderPromo();
@@ -34,10 +36,19 @@ export default class Posts {
   }
 
   updateMainScreen() {
+    this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.MAIN });
     this._clearMain();
+    if (!this._store.getState().posts.length) {
+      this._renderMessage();
+      return;
+    }
     this._renderPromo();
     this._renderLast();
     this._renderPopular();
+  }
+
+  _renderMessage() {
+    this._main.insertAdjacentHTML('beforeend', `<div style="text-align: center; margin: 60px 0; color: #777;">${NO_DATA}</div>`);
   }
 
   _renderPromo() {
@@ -45,11 +56,11 @@ export default class Posts {
       return;
     }
 
-    const promo = new PromoView().createPromoTemplate(); 
+    let promo = new PromoView().createPromoTemplate();
     this._main.insertAdjacentHTML('beforeend', promo);
 
     this._store.getState().promo.forEach((item) => {
-      const post = new PostView(item).createPostTemplate();
+      let post = new PostView(item).createPostTemplate();
       const promoWrapper = this._main.querySelector('#promoPosts');
       promoWrapper.insertAdjacentHTML('beforeend', post);
       promoWrapper.addEventListener('click', this._onPostClick);
@@ -98,13 +109,16 @@ export default class Posts {
     this._main.innerHTML = '';
   }
 
+  _handleDeletePost() {
+    this.updateMainScreen();
+  }
+
   _onNavClick(evt) {
     evt.preventDefault();
     if (this._store.getState().screenMode === ScreenMode.MAIN) {
       return;
     }
     this.updateMainScreen();
-    this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.MAIN });
   }
 
   _onPostClick(evt) {
@@ -113,18 +127,21 @@ export default class Posts {
     }
     this._clearMain();
     this._renderLoader();
-    new Promise(resolve => {
-      setTimeout(() => resolve(), 1000)
+    let promise = new Promise(resolve => {
+      setTimeout(() => resolve(), 1)
+    });
+    promise.then(() => {
+      const postId = evt.target.dataset.postId;
+      const post = this._store.getState().posts.find((item) => item.id === Number(postId));
+      this._postDescriptionPresenter.renderDescription(post, this._main);
+      this._postDescriptionPresenter.setDeletePostHandler(this._handleDeletePost);
+      if (this._store.getState().screenMode !== ScreenMode.EDIT) {
+        this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.EDIT });
+      }
+      this._renderPopular();
     })
-      .then(() => {
-        const postId = evt.target.dataset.postId;
-        const post = this._store.getState().posts.find((item) => item.id === Number(postId));
-        this._postDescriptionPresenter.renderDescription(post, this._main);
-        if (this._store.getState().screenMode !== ScreenMode.EDIT) {
-          this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.EDIT });
-        }
-        this._renderPopular();
-      })
-      .finally(() => {this._removeLoader()})
+    .finally(() => {this._removeLoader()})
   }
+
+  
 }

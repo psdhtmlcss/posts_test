@@ -6,7 +6,7 @@ const createElement = ({id, createDate, link, promo, views, heading}) => (
     <footer>
       <strong>Дата создания:</strong> <time>${formatter.format(createDate)}</time><br>
       <strong>Кол-во просмотров:</strong> <span class="views-count">${views}</span><br>
-      ${promo ? 'Промо' : ''}
+      ${promo ? '<span class="promo">Промо</span>' : ''}
     </footer>
   </article>`
 );
