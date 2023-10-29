@@ -1,3 +1,5 @@
+import { formatter } from '../utils/utils';
+
 const createElement = ({heading, id, createDate, link, description, promo, views}) => (
   `<section class="post-description" data-post-id="${id}">
     <div class="container">
@@ -5,7 +7,7 @@ const createElement = ({heading, id, createDate, link, description, promo, views
       <div class="img"><img src="${link}" alt="${heading}" /></div>
       <p>${description}</p>
       <footer>
-        <strong>Дата создания:</strong> <time>${new Date(createDate)}</time><br>
+        <strong>Дата создания:</strong> <time>${formatter.format(createDate)}</time><br>
         <strong>Кол-во просмотров:</strong> <span class="views-count">${views}</span><br>
         ${promo ? 'Промо' : ''}
       </footer>
