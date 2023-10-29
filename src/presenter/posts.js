@@ -3,6 +3,7 @@ import PromoView from '../view/promo';
 import LastView from '../view/last';
 import PopularView from '../view/popular';
 import PostView from '../view/post';
+import LoaderView from '../view/loader';
 import PostDescriptionPresenter from './postDescription';
 import { ScreenMode } from '../const';
 
@@ -13,6 +14,7 @@ export default class Posts {
     this._main = main;
     this._store = store;
     this._postDescriptionPresenter = new PostDescriptionPresenter();
+    this._loader = new LoaderView().renderLoaderTemplate();
 
     this._onPostClick = this._onPostClick.bind(this);
     this._onNavClick = this._onNavClick.bind(this);
@@ -84,6 +86,14 @@ export default class Posts {
     })
   }
 
+  _renderLoader() {
+    this._main.insertAdjacentHTML('beforeend', this._loader);
+  }
+
+  _removeLoader() {
+    this._main.querySelector('.loader').remove();
+  }
+
   _clearMain() {
     this._main.innerHTML = '';
   }
@@ -102,12 +112,19 @@ export default class Posts {
       return;
     }
     this._clearMain();
-    const postId = evt.target.dataset.postId;
-    const post = this._store.getState().posts.find((item) => item.id === Number(postId));
-    this._postDescriptionPresenter.renderDescription(post, this._main);
-    if (this._store.getState().screenMode !== ScreenMode.EDIT) {
-      this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.EDIT });
-    }
-    this._renderPopular();
+    this._renderLoader();
+    new Promise(resolve => {
+      setTimeout(() => resolve(), 1000)
+    })
+      .then(() => {
+        const postId = evt.target.dataset.postId;
+        const post = this._store.getState().posts.find((item) => item.id === Number(postId));
+        this._postDescriptionPresenter.renderDescription(post, this._main);
+        if (this._store.getState().screenMode !== ScreenMode.EDIT) {
+          this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.EDIT });
+        }
+        this._renderPopular();
+      })
+      .finally(() => {this._removeLoader()})
   }
 }
