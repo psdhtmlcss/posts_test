@@ -1,4 +1,4 @@
-import { TOGGLE_SCREEN_MODE } from '../store/actions';
+import { SET_CURRENT_POST_ID, TOGGLE_SCREEN_MODE } from '../store/actions';
 import PromoView from '../view/promo';
 import LastView from '../view/last';
 import PopularView from '../view/popular';
@@ -21,14 +21,14 @@ export default class Posts {
     this._loader = new LoaderView().renderLoaderTemplate();
 
     this._updateMainScreen = this._updateMainScreen.bind(this);
+    this._updateEditScreen = this._updateEditScreen.bind(this);
     this._onPostClick = this._onPostClick.bind(this);
     this._onNavClick = this._onNavClick.bind(this);
     this._onAddNewPostButtonClick = this._onAddNewPostButtonClick.bind(this);
   }
 
   init() {
-    console.log(this._store.getState());
-    this._addPostPresenter = new AddPostPresenter(this._store, this._postsStore, this._updateMainScreen);
+    this._addPostPresenter = new AddPostPresenter(this._store, this._postsStore, this._updateMainScreen, this._updateEditScreen);
     this._addPostPresenter.init();
     this._nav.addEventListener('click', this._onNavClick);
     this._addNewPostButton.addEventListener('click', this._onAddNewPostButtonClick);
@@ -44,6 +44,7 @@ export default class Posts {
 
   _updateMainScreen() {
     this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.MAIN });
+    this._store.dispatch({ type: SET_CURRENT_POST_ID, payload: null });
     this._clearMain();
     if (!this._store.getState().posts.length) {
       this._renderMessage();
@@ -51,6 +52,13 @@ export default class Posts {
     }
     this._renderPromo();
     this._renderLast();
+    this._renderPopular();
+  }
+
+  _updateEditScreen() {
+    this._clearMain();
+    this._postDescriptionPresenter.renderDescription(this._main);
+    this._postDescriptionPresenter.setDescriptionPostHandlers(this._updateMainScreen, this._addPostPresenter);
     this._renderPopular();
   }
 
@@ -135,9 +143,9 @@ export default class Posts {
     });
     promise.then(() => {
       const postId = evt.target.dataset.postId;
-      const post = this._store.getState().posts.find((item) => item.id === Number(postId));
-      this._postDescriptionPresenter.renderDescription(post, this._main);
-      this._postDescriptionPresenter.setDeletePostHandler(this._updateMainScreen);
+      this._store.dispatch({ type: SET_CURRENT_POST_ID, payload: postId });
+      this._postDescriptionPresenter.renderDescription(this._main);
+      this._postDescriptionPresenter.setDescriptionPostHandlers(this._updateMainScreen, this._addPostPresenter);
       if (this._store.getState().screenMode !== ScreenMode.EDIT) {
         this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.EDIT });
       }

@@ -11,7 +11,10 @@ const createElement = ({heading, id, createDate, link, description, promo, views
         <strong>Кол-во просмотров:</strong> <span class="views-count">${views}</span><br>
         ${promo ? '<span class="promo">Промо</span>' : ''}
       </footer>
-      <div class="options"><button type="button" class="delete-post">Удалить пост</button></div>
+      <div class="options">
+        <button type="button" class="edit-post">Редактировать пост</button>
+        <button type="button" class="delete-post">Удалить пост</button>
+      </div>
     </div>
     
   </section>`
