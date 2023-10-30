@@ -4,6 +4,11 @@ const PROMO_COUNT = 3;
 const LAST_POST_COUNT = 7;
 const POPULAR_POST_COUNT = 4;
 
+const sortPromoPosts = (posts) => {
+  const sPosts = posts.slice();
+  return sPosts.sort((a, b) => b.createDate - a.createDate);
+};
+
 const sortLastPosts = (posts) => {
   const sPosts = posts.slice();
   return sPosts.sort((a, b) => b.createDate - a.createDate);
@@ -16,6 +21,7 @@ const sortPopularPost = (posts) => {
 
 const sortData = (state, data) => {
   state.promo = data.filter((item) => item.promo === true).slice(0, PROMO_COUNT);
+  state.promo = sortPromoPosts(state.promo);
   state.last = sortLastPosts(data).slice(0, LAST_POST_COUNT);
   state.popular = sortPopularPost(data).slice(0, POPULAR_POST_COUNT);
   return state;
