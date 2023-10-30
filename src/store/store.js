@@ -6,7 +6,8 @@ const initialState = {
   promo: [],
   last: [],
   popular: [],
-  screenMode: ScreenMode.MAIN
+  screenMode: ScreenMode.MAIN,
+  currentPostId: null
 };
 
 const createStore = (reducer, initialState) => {
