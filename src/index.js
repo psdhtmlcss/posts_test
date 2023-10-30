@@ -13,7 +13,7 @@ store.dispatch({ type: LOAD_DATA, payload: JSON.parse(postsStore.getItems()) });
 
 const header = document.querySelector('.header');
 const nav = header.querySelector('.nav');
-const time = header.querySelector('time');
+const time = header.querySelector('.time');
 const main = document.querySelector('.main');
 const addNewPostButton = header.querySelector('.add-new-post');
 
