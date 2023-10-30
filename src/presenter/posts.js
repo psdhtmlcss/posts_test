@@ -20,15 +20,15 @@ export default class Posts {
     this._addPostPresenter = null;
     this._loader = new LoaderView().renderLoaderTemplate();
 
-    this._updateMainScreen = this._updateMainScreen.bind(this);
-    this._updateEditScreen = this._updateEditScreen.bind(this);
+    this.updateMainScreen = this.updateMainScreen.bind(this);
+    this.updateEditScreen = this.updateEditScreen.bind(this);
     this._onPostClick = this._onPostClick.bind(this);
     this._onNavClick = this._onNavClick.bind(this);
     this._onAddNewPostButtonClick = this._onAddNewPostButtonClick.bind(this);
   }
 
   init() {
-    this._addPostPresenter = new AddPostPresenter(this._store, this._postsStore, this._updateMainScreen, this._updateEditScreen);
+    this._addPostPresenter = new AddPostPresenter(this._store, this._postsStore, this.updateMainScreen, this.updateEditScreen);
     this._addPostPresenter.init();
     this._nav.addEventListener('click', this._onNavClick);
     this._addNewPostButton.addEventListener('click', this._onAddNewPostButtonClick);
@@ -42,7 +42,7 @@ export default class Posts {
     
   }
 
-  _updateMainScreen() {
+  updateMainScreen() {
     this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.MAIN });
     this._store.dispatch({ type: SET_CURRENT_POST_ID, payload: null });
     this._clearMain();
@@ -55,10 +55,10 @@ export default class Posts {
     this._renderPopular();
   }
 
-  _updateEditScreen() {
+  updateEditScreen() {
     this._clearMain();
     this._postDescriptionPresenter.renderDescription(this._main);
-    this._postDescriptionPresenter.setDescriptionPostHandlers(this._updateMainScreen, this._addPostPresenter);
+    this._postDescriptionPresenter.setDescriptionPostHandlers(this.updateMainScreen, this._addPostPresenter);
     this._renderPopular();
   }
 
@@ -129,7 +129,7 @@ export default class Posts {
     if (this._store.getState().screenMode === ScreenMode.MAIN) {
       return;
     }
-    this._updateMainScreen();
+    this.updateMainScreen();
   }
 
   _onPostClick(evt) {
@@ -139,13 +139,13 @@ export default class Posts {
     this._clearMain();
     this._renderLoader();
     let promise = new Promise(resolve => {
-      setTimeout(() => resolve(), 1)
+      setTimeout(() => resolve(), 1000)
     });
     promise.then(() => {
       const postId = evt.target.dataset.postId;
       this._store.dispatch({ type: SET_CURRENT_POST_ID, payload: postId });
       this._postDescriptionPresenter.renderDescription(this._main);
-      this._postDescriptionPresenter.setDescriptionPostHandlers(this._updateMainScreen, this._addPostPresenter);
+      this._postDescriptionPresenter.setDescriptionPostHandlers(this.updateMainScreen, this._addPostPresenter);
       if (this._store.getState().screenMode !== ScreenMode.EDIT) {
         this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.EDIT });
       }

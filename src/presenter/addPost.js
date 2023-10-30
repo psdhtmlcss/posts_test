@@ -73,7 +73,7 @@ export default class AddPost {
   _createEditModal(post) {
     this._modal.classList.add('edit-post-modal');
     this._modalHeading.textContent = 'Редактировать пост';
-    this._addPostButton.textContent = 'Редактировать';
+    this._addPostButton.textContent = 'Сохранить';
     this._formHeading.value = post.heading;
     this._formLink.value = post.link;
     this._formDescription.value = post.description;
