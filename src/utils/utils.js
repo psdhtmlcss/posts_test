@@ -8,6 +8,7 @@ export const formatter = new Intl.DateTimeFormat('ru', {
 });
 
 export const showDateFormat = (container) => {
+  container.textContent = formatter.format(new Date());
   return function() {
     const date = new Date();
     container.innerHTML = formatter.format(date);

@@ -700,6 +700,7 @@ var formatter = new Intl.DateTimeFormat('ru', {
   second: 'numeric'
 });
 var showDateFormat = function showDateFormat(container) {
+  container.textContent = formatter.format(new Date());
   return function () {
     var date = new Date();
     container.innerHTML = formatter.format(date);
