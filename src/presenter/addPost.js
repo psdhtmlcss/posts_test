@@ -1,25 +1,43 @@
 import { ScreenMode } from '../const';
 import { ADD_NEW_POST, TOGGLE_SCREEN_MODE } from '../store/actions';
 import { getRandomInteger } from '../utils/utils';
+import ModalView from '../view/modal';
 
 export default class AddPost {
-  constructor(modal, form, store, postsStore, handleNewPostClick) {
-    this._modal = modal;
-    this._form = form;
+  constructor(store, postsStore, handleNewPostClick) {
     this._store = store;
     this._postsStore = postsStore;
     this._handleNewPostClick = handleNewPostClick;
-    this._formHeading = this._form.querySelector('.form-heading');
-    this._formLink = this._form.querySelector('.form-link');
-    this._formDescription = this._form.querySelector('.form-description');
-    this._formPromo = this._form.querySelector('.form-promo');
-    this._body = document.querySelector('body');
-    this._backdrop = document.querySelector('.backdrop');
-    this._closeModalButton = this._form.querySelector('.close-modal');
+    this._modal = null;
+    this._form = null;
+    this._formHeading = null;
+    this._formLink = null;
+    this._formDescription = null;
+    this._formPromo = null;
+    this._body = null;
+    this._backdrop = null;
+    this._closeModalButton = null;
 
     this._onBackdropClick = this._onBackdropClick.bind(this);
     this._onCloseModalButtonClick = this._onCloseModalButtonClick.bind(this);
     this._onFormSubmit = this._onFormSubmit.bind(this);
+  }
+
+  init() {
+    const modal = new ModalView().createModalTemplate();
+    const backdrop = document.createElement('div');
+    backdrop.classList.add('backdrop');
+    this._body = document.querySelector('body');
+    this._body.insertAdjacentHTML('beforeend', modal);
+    this._body.append(backdrop);
+    this._modal = this._body.querySelector('.modal');
+    this._form = this._modal.querySelector('form');
+    this._formHeading = this._form.querySelector('.form-heading');
+    this._formLink = this._form.querySelector('.form-link');
+    this._formDescription = this._form.querySelector('.form-description');
+    this._formPromo = this._form.querySelector('.form-promo');
+    this._backdrop = this._body.querySelector('.backdrop');
+    this._closeModalButton = this._form.querySelector('.close-modal');
   }
 
   modalOpen() {
@@ -60,6 +78,7 @@ export default class AddPost {
       promo: this._formPromo.checked,
       views: getRandomInteger(0, 5000),
     }
+    console.log('this.store', this._store);
     this._store.dispatch({ type: ADD_NEW_POST, payload: newPostData });
     if (this._store.getState().screenMode !== ScreenMode.MAIN) {
       this._store.dispatch({ type: TOGGLE_SCREEN_MODE, payload: ScreenMode.MAIN });

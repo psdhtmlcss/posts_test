@@ -1,5 +1,4 @@
 import './style.css';
-import AddPostPresenter from './presenter/addPost';
 import PostsPresenter from './presenter/posts';
 import store from './store/store';
 import LocalStore from './store/localStore';
@@ -21,25 +20,10 @@ const nav = header.querySelector('.nav');
 const time = header.querySelector('time');
 const main = document.querySelector('.main');
 const addNewPostButton = header.querySelector('.add-new-post');
-const form = document.querySelector('form');
-const modal = document.querySelector('.modal');
 
 const showHeaderTime = showDateFormat(time);
 setInterval(showHeaderTime, 1000);
 
-const postsPresenter = new PostsPresenter(nav, main, store, postsStore);
-const handleNewPostClick = () => {
-  postsPresenter.updateMainScreen();
-};
-
-const addPostPresenter = new AddPostPresenter(modal, form, store, postsStore, handleNewPostClick);
-
+const postsPresenter = new PostsPresenter(nav, addNewPostButton, main, store, postsStore);
 postsPresenter.init();
-
-const onAddNewPostClick = (evt) => {
-  evt.preventDefault();
-  addPostPresenter.modalOpen();
-}
-
-addNewPostButton.addEventListener('click', onAddNewPostClick);
 

@@ -29,6 +29,7 @@ export default class PostDescription {
 
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
+    console.log(this._post.id);
     this._store.dispatch({ type: DELETE_POST, payload: this._post.id });
     this._postsStore.setItems(this._store.getState().posts);
     this._callback();
